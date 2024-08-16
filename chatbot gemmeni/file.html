@@ -56,19 +56,25 @@
         }
         #chat-button {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background-color: #007bff;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            bottom: 30px; /* Increased space from the bottom */
+            right: 30px; /* Increased space from the right */
+            width: 70px; /* Slightly larger width */
+            height: 70px; /* Slightly larger height */
+            background-color: #28a745; /* Changed background color to green */
+            border-radius: 10px; /* Changed shape to rounded rectangle */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Made shadow larger and darker */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 1050; /* Increased z-index for better visibility */
+            transition: transform 0.3s ease; /* Added smooth scaling effect */
         }
+        
+        #chat-button:hover {
+            transform: scale(1.1); /* Slightly enlarges the button on hover */
+        }
+        
         
         #botButton:hover {
             background-color: #0056b3;
@@ -81,6 +87,7 @@
     </style>
 </head>
 <body>
+    
     <!---- Edit by Sachin --->
     <header class="header">
         <div class="logo">Department of Justice (india)</div>
