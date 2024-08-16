@@ -12,7 +12,7 @@ responses = {
   
 }
 
-
+    
 def get_gemini_response(prompt):
     try:
         response = model.generate_content(prompt)
