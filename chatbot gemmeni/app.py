@@ -26,7 +26,7 @@ def get_response(user_input):
         if re.search(pattern, user_input):
             return response
     
-    # If no predefined response is found, use Gemini
+    # If no predefined response is found, use Gemini (Avartan)
     gemini_prompt = f"""As an AI assistant for the Department of Justice in India, 
     please provide a concise and accurate answer to the following question:
     {user_input}
