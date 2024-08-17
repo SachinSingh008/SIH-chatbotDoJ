@@ -98,7 +98,7 @@ def get_gemini_response(prompt):
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
-        return f"I'm sorry, I couldn't get an answer from Gemini. Error: {str(e)}"
+        return f"{str(e)}"
 
 def get_response(user_input):
     user_input = user_input.lower()

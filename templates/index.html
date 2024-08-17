@@ -29,14 +29,21 @@
         }
         #back-button {
             position: absolute;
-            top: 10px;
+            top: 50%;
             left: 10px;
-            background-color: #f0f0f0;
-            color: #0056b3;
+            transform: translateY(-50%);
+            background-color: transparent;
+            color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
+            padding: 5px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #back-button svg {
+            width: 20px;
+            height: 20px;
         }
         #chatbox {
             flex-grow: 1;
@@ -69,12 +76,21 @@
             bottom: 20px;
             right: 20px;
             z-index: 1001;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             background-color: #0056b3;
-            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
             cursor: pointer;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        #chat-button img {
+            width: 40px;
+            height: 40px;
         }
         .message {
             max-width: 80%;
@@ -138,11 +154,18 @@
     <h1>Your Website Content</h1>
     <!-- Add your existing website content here -->
 
-    <button id="chat-button">Chat with DoJ Bot</button>
+    <button id="chat-button" aria-label="Chat with DoJ Bot">
+        <img src="C:\Users\rites\Desktop\Smart India Hackathon\New folder\SIH-chatbotDoJ\templates\bot-icon.png" alt="Bot Icon">
+    </button>
 
     <div id="chat-container">
         <div id="chat-header">
-            <button id="back-button" onclick="toggleChat()">Back</button>
+            <button id="back-button" onclick="toggleChat()" aria-label="Back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
             DoJ Chatbot
         </div>
         <div id="chatbox"></div>
@@ -206,8 +229,19 @@
             var botMessageDiv = $('<div class="message bot-message"></div>');
             $('#chatbox').append(botMessageDiv);
 
-            botMessageDiv.html(htmlResponse);
-            $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+            var lines = htmlResponse.split('<br>');
+            var lineIndex = 0;
+
+            function displayNextLine() {
+                if (lineIndex < lines.length) {
+                    botMessageDiv.append(lines[lineIndex] + '<br>');
+                    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+                    lineIndex++;
+                    setTimeout(displayNextLine, 50); // Adjust the delay as needed
+                }
+            }
+
+            displayNextLine();
         }
     </script>
 </body>
