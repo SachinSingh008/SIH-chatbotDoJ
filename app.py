@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import re
 import google.generativeai as genai
 
@@ -9,86 +9,88 @@ genai.configure(api_key='AIzaSyAO36_LDr2H1jojusoSo72mscY6lA6BQO4')
 model = genai.GenerativeModel('gemini-pro')
 
 responses = {
-    r"hi|hello":"Hello! How can I help you today?",
-    r"how are you":"I'm doing well, thank you! How about you?",
-    r"what is your name":"I am the official bot for the Department of Justice, India. How can I assist you?",
-    r"what does the department of justice do":"Hello! How can I help you today?",
-    r"division|department": """The Department of Justice (DoJ) has several key divisions and functions:
-1. Legal Affairs: Handles legal matters for the government.
-2. Judicial Appointments: Manages the process of appointing judges to various courts.
-3. Access to Justice: Works on improving access to legal services for all citizens.
-4. Infrastructure Development for Judiciary: Oversees the development of court infrastructure.
-5. Special Courts: Sets up Fast Track Special Courts for cases related to rape and POCSO Act.
-6. eCourts Project: Implements computerization of courts across the country.
-7. Legal Aid: Provides legal assistance to the poor and underprivileged.
-8. Training: Offers financial assistance to the National Judicial Academy for training Judicial Officers.""",
+    r"divisions of doj|doj divisions": """The Department of Justice (DoJ) has several key divisions:
 
-    r"judge|supreme court|high court|district court": """Current information on judges and vacancies:
-1. Supreme Court: Maximum strength of 34 judges, including the Chief Justice of India.
-2. High Courts: There are 25 High Courts in India. The number of judges varies for each High Court.
-3. District & Subordinate Courts: These courts form the backbone of the Indian judiciary at the local level.
+**Legal Affairs Division**
+**Judicial Appointments Division**
+**Access to Justice Division**
+**Infrastructure Development for Judiciary Division**
+**Special Courts Division**
+**eCourts Project Division**
+**Legal Aid Division**
+**Training and Education Division**""",
 
-For the most up-to-date information on current appointments and vacancies, please visit the official website of the Department of Justice or the respective court websites.""",
+    r"judges|vacancies|appointments": """Current information on judges (as of April 2024):
 
-    r"pendency|case|njdg": """You can check the pendency of cases through the National Judicial Data Grid (NJDG):
-1. Visit https://njdg.ecourts.gov.in/
-2. The NJDG provides real-time data on pending cases across various courts in India.
-3. You can view statistics by state, district, or court type.
-4. The data includes information on case types, age of pending cases, and disposal rates.
-5. This tool is part of the eCourts project to improve transparency and efficiency in the judicial system.""",
+**Supreme Court:** 34 judges including the Chief Justice of India
+**High Courts:** 25 High Courts with a total sanctioned strength of 1,114 judges
+**District & Subordinate Courts:** Approximately 24,000 judges
 
-    r"traffic|fine|violation|pay": """To pay traffic violation fines:
-1. Visit the e-Challan system at https://echallan.parivahan.gov.in/
-2. Enter your vehicle number or challan number to find your pending challans.
-3. Select the challan you want to pay and choose your preferred payment method.
-4. Complete the payment process and keep the receipt for your records.
-5. You can also pay fines through various mobile apps or at designated traffic police offices.""",
+*Please note that the exact number of vacancies can change frequently. For the most up-to-date information, visit the official Department of Justice website.*""",
 
-    r"live stream|streaming": """Live streaming of court cases:
-1. The Supreme Court has begun live streaming of Constitution Bench cases.
-2. You can watch these on the official YouTube channel of the Supreme Court.
-3. This initiative aims to increase transparency and public access to important court proceedings.
-4. Not all cases are live-streamed; the court decides which cases to broadcast.
-5. Some High Courts have also started live streaming selected cases.""",
+    r"pendency of cases|njdg": """To check the pendency of cases through National Judicial Data Grid (NJDG):
 
-    r"efiling|file|epay": """Steps for eFiling and ePay:
-1. Visit https://efiling.ecourts.gov.in/
-2. Register as a user if you haven't already.
-3. Log in and select 'New Case Filing' or 'Documents Filing' as per your requirement.
-4. Fill in the required details and upload necessary documents.
-5. Pay the court fees online using the ePay system.
-6. Submit your filing and note down the CNR (Case Number Record) for future reference.
-7. You can track the status of your case using this CNR number.""",
+1. Visit the NJDG website (https://njdg.ecourts.gov.in/)
+2. Select the desired court type
+3. View the dashboard for case pendency statistics
+4. Use filters to narrow down the data""",
 
-    r"fast track|special court": """Information on Fast Track Courts:
-1. Fast Track Courts are special courts set up for speedy trial and disposal of cases.
-2. They focus particularly on cases involving rape and offenses under the POCSO Act.
-3. These courts aim to reduce the backlog of cases and provide swift justice.
-4. They follow a streamlined process to expedite case hearings and judgments.
-5. The establishment of these courts is part of the government's effort to address serious crimes efficiently.""",
+    r"traffic violation fine|pay fine": """To pay a traffic violation fine:
 
-    r"app|mobile|ecourt services": """Downloading and using the eCourts Services Mobile app:
-1. Available on Google Play Store (Android) and App Store (iOS).
-2. The app provides easy access to case status, court orders, and cause lists.
-3. Features include case status tracking, checking daily case lists, and viewing court orders.
-4. You can search cases using CNR number, case number, party name, or FIR number.
-5. The app also provides information about court complexes and judges.""",
+1. Visit your state's e-challan payment portal
+2. Enter your challan number or vehicle details
+3. Review the violation details and fine amount
+4. Choose a payment method and complete the payment
+5. Save the receipt""",
 
-    r"tele law": """Availing Tele Law Services:
-1. Tele Law provides legal advice to people in rural areas through video conferencing.
-2. Services are available at Common Service Centers (CSCs) in rural areas.
-3. To use the service, visit your nearest CSC and request a Tele Law consultation.
-4. You'll be connected with a panel lawyer who will provide legal advice.
-5. This service aims to bridge the gap in access to justice for rural and remote areas.
-6. It covers various areas of law including family matters, property disputes, and criminal cases.""",
+    r"live streaming|court cases": """For live streaming of court cases:
 
-    r"status|current status": """Checking the current status of a case:
-1. Visit the eCourts website: https://ecourts.gov.in/ecourts_home/
-2. Click on 'Case Status' in the main menu.
-3. You can search by CNR number, case number, party name, or FIR number.
-4. Select the appropriate court (Supreme Court, High Court, or District Court).
-5. Enter the required details and submit your query.
-6. The system will display the current status, next hearing date, and other relevant information about your case."""
+1. Check the official website of the Supreme Court or respective High Courts
+2. Look for a 'Live Streaming' or 'YouTube' link
+3. Some courts have dedicated YouTube channels for live streaming
+4. Not all cases are live-streamed; it depends on the court's discretion""",
+
+    r"efiling|epay": """Steps for eFiling and ePay:
+
+1. Visit the eFiling portal (https://efiling.ecourts.gov.in/)
+2. Register or log in to your account
+3. Choose 'New Case' or 'Documents in Existing Case'
+4. Fill in the required details and upload necessary documents
+5. Pay the court fees online using the ePay feature
+6. Submit the filing and note the confirmation number""",
+
+    r"fast track courts": """About Fast Track Courts:
+
+**Purpose:** To expedite trials for certain types of cases
+**Focus:** Cases like sexual offenses, crimes against children, and senior citizens
+**Goal:** Complete trials within 6 months to 2 years
+**Operation:** Simplified procedures to reduce delays
+**Staffing:** Experienced judges and support personnel""",
+
+    r"ecourts app|mobile app": """To download the eCourts Services Mobile app:
+
+1. Open Google Play Store (Android) or App Store (iOS)
+2. Search for 'eCourts Services'
+3. Look for the app developed by eCommittee, Supreme Court of India
+4. Click 'Install' or 'Get' to download the app
+5. Open the app and register to access various e-court services""",
+
+    r"tele law|legal services": """Availing Tele Law Services:
+
+1. Visit your nearest Common Service Centre (CSC)
+2. Request a Tele Law consultation
+3. Connect with a panel lawyer via video conference
+4. Discuss your legal issue and receive advice
+5. Schedule follow-up consultations if needed
+6. The service is free for eligible beneficiaries""",
+
+    r"case status": """To know the current status of a case:
+
+1. Visit the eCourts website (https://ecourts.gov.in/ecourts_home/)
+2. Click on 'Case Status'
+3. Choose the court type (Supreme Court, High Court, or District Court)
+4. Enter the required details (case number, filing number, or party name)
+5. Click 'Go' to view the current status and history of the case"""
 }
 
 def get_gemini_response(prompt):
@@ -105,12 +107,13 @@ def get_response(user_input):
             return response
     
     gemini_prompt = f"""As an AI assistant for the Department of Justice in India, 
-    please provide a concise and accurate answer to the following question:
+    provide a brief and direct answer to this question:
     {user_input}
-    Focus on legal matters, court procedures, and DoJ services."""
+    Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
+    Keep the response concise, ideally within 2-3 sentences. Use **bold** for key terms."""
     
     gemini_response = get_gemini_response(gemini_prompt)
-    return f"I don't have a predefined answer for that, but here's what I found:\n{gemini_response}"
+    return gemini_response
 
 @app.route('/get_response', methods=['POST'])
 def chatbot_response():
