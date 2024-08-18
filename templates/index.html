@@ -11,7 +11,7 @@
             bottom: 20px;
             right: 20px;
             width: 300px;
-            height: 400px;
+            height: 500px; /* Increased height */
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -49,7 +49,7 @@
             flex-grow: 1;
             overflow-y: auto;
             padding: 10px;
-            height: 300px;
+            height: 400px;
         }
         #user-input {
             display: flex;
@@ -148,11 +148,124 @@
             padding: 5px;
             background-color: #f0f0f0;
         }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        #header {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #003366;
+            padding: 10px 0;
+        }
+        #navbar a {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #navbar a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+        #main-content {
+            padding: 20px;
+        }
+        #intro {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #important-links, #notifications {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        ul li a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        #footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Your Website Content</h1>
     <!-- Add your existing website content here -->
+    <div id="header">
+        Department of Justice, India
+    </div>
+    <div id="navbar">
+        <a href="#">Home</a>
+        <a href="#">About Us</a>
+        <a href="#">Services</a>
+        <a href="#">Legal Resources</a>
+        <a href="#">Contact Us</a>
+    </div>
+    <div id="main-content">
+        <div id="intro">
+            <h2>Welcome to the Department of Justice, India</h2>
+            <p>The Department of Justice under the Ministry of Law and Justice is the oldest limb of the Government of India. We aim to ensure the administration of justice, promote legal reform, and provide accessible and effective legal services to the citizens of India.</p>
+        </div>
+
+        <div id="important-links">
+            <h2>Important Links</h2>
+            <ul>
+                <li><a href="#">Supreme Court of India</a></li>
+                <li><a href="#">High Courts of India</a></li>
+                <li><a href="#">National Legal Services Authority</a></li>
+                <li><a href="#">E-Courts Project</a></li>
+                <li><a href="#">Ministry of Law and Justice</a></li>
+            </ul>
+        </div>
+
+        <div id="notifications">
+            <h2>Latest Notifications</h2>
+            <ul>
+                <li><a href="#">Notification 1: Amendment in Legal Services Act</a></li>
+                <li><a href="#">Notification 2: New Guidelines for Legal Aid</a></li>
+                <li><a href="#">Notification 3: Launch of E-Courts Phase III</a></li>
+                <li><a href="#">Notification 4: Upcoming Judicial Appointments</a></li>
+                <li><a href="#">Notification 5: Revised Schedule for Court Proceedings</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="footer">
+        &copy; 2024 Department of Justice, India. All Rights Reserved.
+    </div>
 
     <button id="chat-button" aria-label="Chat with DoJ Bot">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Bot Icon">
@@ -161,10 +274,7 @@
     <div id="chat-container">
         <div id="chat-header">
             <button id="back-button" onclick="toggleChat()" aria-label="Back">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
+                <!-- Back Button SVG Icon -->
             </button>
             DoJ Chatbot
         </div>
@@ -176,6 +286,7 @@
         <div id="learning-note">This chatbot is capable of learning over time to improve customer interactions and can handle large data sets if needed.</div>
     </div>
 
+    <!-- Include jQuery and Showdown.js -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
     <script>
@@ -211,7 +322,7 @@
             $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
 
             $.ajax({
-                url: '/get_response',
+                url: '/get_response',  // Your backend endpoint
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({message: userInput}),
@@ -228,20 +339,33 @@
             
             var botMessageDiv = $('<div class="message bot-message"></div>');
             $('#chatbox').append(botMessageDiv);
-
-            var lines = htmlResponse.split('<br>');
-            var lineIndex = 0;
-
-            function displayNextLine() {
-                if (lineIndex < lines.length) {
-                    botMessageDiv.append(lines[lineIndex] + '<br>');
+        
+            var charIndex = 0;
+        
+            function displayNextCharacter() {
+                if (charIndex < htmlResponse.length) {
+                    let currentChar = htmlResponse[charIndex];
+                    
+                    // If we encounter the start of an HTML tag, append the whole tag at once
+                    if (currentChar === '<') {
+                        let tag = '';
+                        while (htmlResponse[charIndex] !== '>' && charIndex < htmlResponse.length) {
+                            tag += htmlResponse[charIndex];
+                            charIndex++;
+                        }
+                        tag += '>';
+                        botMessageDiv.append(tag);
+                    } else {
+                        botMessageDiv.append(currentChar);
+                    }
+        
                     $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
-                    lineIndex++;
-                    setTimeout(displayNextLine, 50); // Adjust the delay as needed
+                    charIndex++;
+                    setTimeout(displayNextCharacter, 30); // Adjust the delay for typing effect
                 }
             }
-
-            displayNextLine();
+        
+            displayNextCharacter();
         }
     </script>
 </body>
