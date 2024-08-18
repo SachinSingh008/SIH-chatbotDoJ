@@ -107,7 +107,7 @@ def get_response(user_input):
             return response
     
     gemini_prompt = f"""As an AI assistant for the Department of Justice in India, integrated on the website of department of justice
-    provide a brief and direct answer to this question . answer the question and also add bold text to hilight important points:
+    provide a brief and direct answer to this question . answer the question and also add bold text to highlight important points:
     {user_input}
     Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
     Keep the response concise, ideally within 2-3 sentences. Use **bold** for key terms."""
