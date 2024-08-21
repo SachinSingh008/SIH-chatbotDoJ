@@ -5,13 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Website with DoJ Chatbot</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+    
+        /* Header and Navigation */
+        #header, #navbar {
+            color: white;
+            text-align: center;
+        }
+    
+        #header {
+            background-color: #0056b3;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    
+        #navbar {
+            display: flex;
+            justify-content: All;
+            background-color: #003366;
+            padding: 10px 0;
+        }
+    
+        #navbar a {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    
+        #navbar a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+    
+        /* Main Content */
+        #main-content {
+            padding: 20px;
+        }
+    
+        #intro, #important-links, #notifications {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    
+        #intro {
+            background-color: #e9ecef;
+        }
+    
+        #important-links, #notifications {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    
+        h2 {
+            color: #0056b3;
+        }
+    
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+    
+        ul li {
+            margin-bottom: 10px;
+        }
+    
+        ul li a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+    
+        ul li a:hover {
+            text-decoration: underline;
+        }
+    
+        /* Footer */
+        #footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+    
+        /* Chat Container */
         #chat-container {
             display: none;
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 300px;
-            height: 500px; /* Increased height */
+            width: 400px;
+            height: 520px;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -19,6 +111,7 @@
             z-index: 1000;
             flex-direction: column;
         }
+    
         #chat-header {
             background-color: #0056b3;
             color: white;
@@ -27,6 +120,7 @@
             text-align: center;
             position: relative;
         }
+    
         #back-button {
             position: absolute;
             top: 50%;
@@ -41,21 +135,26 @@
             align-items: center;
             justify-content: center;
         }
+    
         #back-button svg {
             width: 20px;
             height: 20px;
         }
+    
         #chatbox {
             flex-grow: 1;
             overflow-y: auto;
             padding: 10px;
             height: 400px;
         }
+    
+        /* User Input */
         #user-input {
             display: flex;
             padding: 10px;
             background-color: white;
         }
+    
         #user-input input {
             flex-grow: 1;
             margin-right: 10px;
@@ -63,7 +162,8 @@
             border: 1px solid #ddd;
             border-radius: 3px;
         }
-        #user-input button {
+    
+        #user-input button, .detail-button {
             background-color: #0056b3;
             color: white;
             border: none;
@@ -71,6 +171,15 @@
             border-radius: 3px;
             cursor: pointer;
         }
+    
+        .detail-button {
+            margin-left: 10px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-top: 5px;
+        }
+    
+        /* Chat Button */
         #chat-button {
             position: fixed;
             bottom: 20px;
@@ -88,10 +197,13 @@
             align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
+    
         #chat-button img {
             width: 40px;
             height: 40px;
         }
+    
+        /* Messages */
         .message {
             max-width: 80%;
             margin-bottom: 10px;
@@ -99,19 +211,33 @@
             border-radius: 20px;
             clear: both;
         }
+    
         .user-message {
             background-color: #dcf8c6;
             float: right;
         }
+    
         .bot-message {
             background-color: white;
             float: left;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+    
         .bot-message strong {
             font-weight: bold;
         }
+    
+        .bot-message ol {
+            padding-left: 20px;
+            margin: 0;
+        }
+    
+        .bot-message li, .bot-message p {
+            margin-bottom: 10px;
+        }
+    
+        /* Thinking Animation */
         .thinking {
             float: left;
             background-color: #e0e0e0;
@@ -119,6 +245,7 @@
             border-radius: 20px;
             margin-bottom: 10px;
         }
+    
         .dot {
             display: inline-block;
             width: 8px;
@@ -127,97 +254,27 @@
             background-color: #444;
             animation: wave 1.3s linear infinite;
         }
+    
         .dot:nth-child(2) {
             animation-delay: -1.1s;
         }
+    
         .dot:nth-child(3) {
             animation-delay: -0.9s;
         }
+    
         @keyframes wave {
-            0%, 60%, 100% {
-                transform: initial;
-            }
-            30% {
-                transform: translateY(-10px);
-            }
+            0%, 60%, 100% { transform: initial; }
+            30% { transform: translateY(-10px); }
         }
+    
+        /* Learning Note */
         #learning-note {
             font-size: 0.8em;
             color: #666;
             text-align: center;
             padding: 5px;
             background-color: #f0f0f0;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-        }
-        #header {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        #navbar {
-            display: flex;
-            justify-content: center;
-            background-color: #003366;
-            padding: 10px 0;
-        }
-        #navbar a {
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        #navbar a:hover {
-            background-color: #0056b3;
-            border-radius: 5px;
-        }
-        #main-content {
-            padding: 20px;
-        }
-        #intro {
-            background-color: #e9ecef;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        #important-links, #notifications {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #0056b3;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        ul li {
-            margin-bottom: 10px;
-        }
-        ul li a {
-            color: #0056b3;
-            text-decoration: none;
-        }
-        ul li a:hover {
-            text-decoration: underline;
-        }
-        #footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: 20px;
         }
     </style>
 </head>
@@ -340,13 +397,15 @@
             var botMessageDiv = $('<div class="message bot-message"></div>');
             $('#chatbox').append(botMessageDiv);
         
+            // Convert bullet points or plain text to numbered list
+            htmlResponse = convertToNumberedList(htmlResponse);
+        
             var charIndex = 0;
         
             function displayNextCharacter() {
                 if (charIndex < htmlResponse.length) {
                     let currentChar = htmlResponse[charIndex];
                     
-                    // If we encounter the start of an HTML tag, append the whole tag at once
                     if (currentChar === '<') {
                         let tag = '';
                         while (htmlResponse[charIndex] !== '>' && charIndex < htmlResponse.length) {
@@ -361,11 +420,68 @@
         
                     $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
                     charIndex++;
-                    setTimeout(displayNextCharacter, 30); // Adjust the delay for typing effect
+                    setTimeout(displayNextCharacter, 30);
+                } else {
+                    addDetailButtons(botMessageDiv);
                 }
             }
         
             displayNextCharacter();
+        }
+        
+        function convertToNumberedList(html) {
+            var $temp = $('<div>').html(html);
+            var $list = $('<ol>');
+            var listStarted = false;
+        
+            $temp.contents().each(function() {
+                if (this.nodeType === 3) { // Text node
+                    var lines = $(this).text().split('\n');
+                    lines.forEach(function(line) {
+                        line = line.trim();
+                        if (line) {
+                            if (!listStarted) {
+                                $temp.empty().append($list);
+                                listStarted = true;
+                            }
+                            $list.append($('<li>').text(line));
+                        }
+                    });
+                } else if (this.nodeType === 1) { // Element node
+                    if ($(this).is('ul, ol')) {
+                        $list = $('<ol>').append($(this).contents());
+                        $temp.empty().append($list);
+                        listStarted = true;
+                    } else if ($(this).is('li')) {
+                        if (!listStarted) {
+                            $temp.empty().append($list);
+                            listStarted = true;
+                        }
+                        $list.append($(this));
+                    } else {
+                        $list.append($('<li>').append($(this).clone()));
+                    }
+                }
+            });
+        
+            return $temp.html();
+        }
+        
+        function addDetailButtons(messageDiv) {
+            var listItems = messageDiv.find('li');
+            listItems.each(function(index) {
+                var button = $('<button>').text('More details').addClass('detail-button');
+                button.on('click', function() {
+                    askForDetails(index + 1, $(this).parent().text().replace('More details', '').trim());
+                });
+                $(this).append(' ').append(button); // Add a space before the button
+            });
+        }
+        
+        function askForDetails(pointNumber, pointText) {
+            var userInput = "Tell me more about point " + pointNumber + ": " + pointText;
+            $('#user-message').val(userInput);
+            sendMessage();
         }
     </script>
 </body>

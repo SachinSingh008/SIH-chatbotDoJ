@@ -11,20 +11,20 @@ model = genai.GenerativeModel('gemini-pro')
 responses = {
     r"divisions of doj|doj divisions": """The Department of Justice (DoJ) has several key divisions:
 
-**Legal Affairs Division**
-**Judicial Appointments Division**
-**Access to Justice Division**
-**Infrastructure Development for Judiciary Division**
-**Special Courts Division**
-**eCourts Project Division**
-**Legal Aid Division**
-**Training and Education Division**""",
+1. Legal Affairs Division
+2. Judicial Appointments Division
+3. Access to Justice Division
+4. Infrastructure Development for Judiciary Division
+5. Special Courts Division
+6. eCourts Project Division
+7. Legal Aid Division
+8. Training and Education Division""",
 
     r"judges|vacancies|appointments": """Current information on judges (as of April 2024):
 
-**Supreme Court:** 34 judges including the Chief Justice of India
-**High Courts:** 25 High Courts with a total sanctioned strength of 1,114 judges
-**District & Subordinate Courts:** Approximately 24,000 judges
+1. **Supreme Court:** 34 judges including the Chief Justice of India
+2. **High Courts:** 25 High Courts with a total sanctioned strength of 1,114 judges
+3. **District & Subordinate Courts:** Approximately 24,000 judges
 
 *Please note that the exact number of vacancies can change frequently. For the most up-to-date information, visit the official Department of Justice website.*""",
 
@@ -61,11 +61,11 @@ responses = {
 
     r"fast track courts": """About Fast Track Courts:
 
-**Purpose:** To expedite trials for certain types of cases
-**Focus:** Cases like sexual offenses, crimes against children, and senior citizens
-**Goal:** Complete trials within 6 months to 2 years
-**Operation:** Simplified procedures to reduce delays
-**Staffing:** Experienced judges and support personnel""",
+1. **Purpose:** To expedite trials for certain types of cases
+2. **Focus:** Cases like sexual offenses, crimes against children, and senior citizens
+3. **Goal:** Complete trials within 6 months to 2 years
+4. **Operation:** Simplified procedures to reduce delays
+5. **Staffing:** Experienced judges and support personnel""",
 
     r"ecourts app|mobile app": """To download the eCourts Services Mobile app:
 
@@ -107,10 +107,10 @@ def get_response(user_input):
             return response
     
     gemini_prompt = f"""As an AI assistant for the Department of Justice in India, integrated on the website of department of justice
-    provide a brief and direct answer to this question . answer the question and also add bold text to highlight important points:
+    provide a brief and direct answer to this question. Answer the question and also add bold text to highlight important points:
     {user_input}
     Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
-    Keep the response concise, ideally within 2-3 sentences. Use **bold** for key terms."""
+    Keep the response concise, ideally within 3-5 numbered points and display number insted of bullets. Use **bold** for key terms."""
     
     gemini_response = get_gemini_response(gemini_prompt)
     return gemini_response
@@ -125,5 +125,5 @@ def chatbot_response():
 def home():
     return render_template('index.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="192.168.101.100", port=5500)
