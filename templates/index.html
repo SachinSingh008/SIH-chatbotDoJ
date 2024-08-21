@@ -333,14 +333,13 @@
             <button id="back-button" onclick="toggleChat()" aria-label="Back">
                 <img src = "https://www.pngmart.com/files/22/Back-Button-PNG-Photo.png"height= "30px"  alt="back">
             </button>
-            DoJ Chatbot
+            VAANI
         </div>
         <div id="chatbox"></div>
         <div id="user-input">
             <input type="text" id="user-message" placeholder="Type your message...">
             <button onclick="sendMessage()">Send</button>
         </div>
-        <div id="learning-note">This chatbot is capable of learning over time to improve customer interactions and can handle large data sets if needed.</div>
     </div>
 
     <!-- Include jQuery and Showdown.js -->
@@ -390,11 +389,16 @@
             });
         }
 
-        function displayResponse(response) {
+        function displayResponse(response, iconPath) {
             var converter = new showdown.Converter();
             var htmlResponse = converter.makeHtml(response);
-            
+        
             var botMessageDiv = $('<div class="message bot-message"></div>');
+        
+            // Add the icon image to the bot message div
+            var iconImg = $('<img>').attr('src', iconPath).addClass('bot-icon');
+            botMessageDiv.prepend(iconImg);
+        
             $('#chatbox').append(botMessageDiv);
         
             // Convert bullet points or plain text to numbered list
@@ -405,7 +409,7 @@
             function displayNextCharacter() {
                 if (charIndex < htmlResponse.length) {
                     let currentChar = htmlResponse[charIndex];
-                    
+        
                     if (currentChar === '<') {
                         let tag = '';
                         while (htmlResponse[charIndex] !== '>' && charIndex < htmlResponse.length) {
