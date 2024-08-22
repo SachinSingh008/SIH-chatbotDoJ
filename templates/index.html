@@ -487,6 +487,20 @@
             $('#user-message').val(userInput);
             sendMessage();
         }
+        function toggleChat() {
+            $('#chat-container').toggle();
+            $('#chat-button').toggle();
+            
+            // Check if the chatbox is empty (i.e., chat just opened)
+            if ($('#chatbox').is(':empty')) {
+                displayInitialGreeting();
+            }
+        }
+        
+        function displayInitialGreeting() {
+            var greeting = "Hi, I am Vaani. How may I help you? Enter the query you want to ask in the section below.";
+            displayResponse(greeting, );
+        }
     </script>
 </body>
 </html>

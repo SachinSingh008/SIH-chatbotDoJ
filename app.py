@@ -9,6 +9,7 @@ genai.configure(api_key='AIzaSyAO36_LDr2H1jojusoSo72mscY6lA6BQO4')
 model = genai.GenerativeModel('gemini-pro')
 
 responses = {
+     r"hi|hello|hey|namaste|hola|bonjour": "Hello! How can I assist you today?",
     r"divisions of doj|doj divisions": """The Department of Justice (DoJ) has several key divisions:
 
 1. Legal Affairs Division
@@ -106,11 +107,12 @@ def get_response(user_input):
         if re.search(pattern, user_input):
             return response
     
-    gemini_prompt = f"""As an AI assistant for the Department of Justice in India, integrated on the website of department of justice
-    provide a brief and direct answer to this question. Answer the question and also add bold text to highlight important points:
-    {user_input}
-    Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
-    Keep the response concise, ideally within 3-5 numbered points and display number insted of bullets. Use **bold** for key terms."""
+    gemini_prompt = f"""As Vaani, an AI assistant for the Department of Justice in India, integrated on the website of department of justice:
+If the user's message appears to be a greeting in any language, respond with a friendly greeting and ask how you can help.
+Otherwise, provide a brief and direct answer to this question. Answer the question and also add bold text to highlight important points:
+{user_input}
+Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
+Keep the response concise, . Use **bold** for key terms."""
     
     gemini_response = get_gemini_response(gemini_prompt)
     return gemini_response
@@ -126,4 +128,4 @@ def home():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    app.run(host="192.168.149.71", port=5500)
+    app.run(host="192.168.203.79", port=5500)
