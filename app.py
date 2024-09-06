@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import re
 import google.generativeai as genai
+import requests
 
 app = Flask(__name__)
 
@@ -9,7 +10,7 @@ genai.configure(api_key='AIzaSyAO36_LDr2H1jojusoSo72mscY6lA6BQO4')
 model = genai.GenerativeModel('gemini-pro')
 
 responses = {
-     r"hi|hello|hey|namaste|hola|bonjour": "Hello! How can I assist you today?",
+    
     r"divisions of doj|doj divisions": """The Department of Justice (DoJ) has several key divisions:
 
 1. Legal Affairs Division
@@ -101,21 +102,46 @@ def get_gemini_response(prompt):
     except Exception as e:
         return f"{str(e)}"
 
+
 def get_response(user_input):
     user_input = user_input.lower()
+    
+    # Check if the user is asking about a case update
+    if re.search(r'case update|case status', user_input):
+        return "Please provide your case number for the latest update."
+    
     for pattern, response in responses.items():
         if re.search(pattern, user_input):
             return response
     
+    # If no predefined response, use Gemini
     gemini_prompt = f"""As Vaani, an AI assistant for the Department of Justice in India, integrated on the website of department of justice:
-If the user's message appears to be a greeting in any language, respond with a friendly greeting and ask how you can help.
-Otherwise, provide a brief and direct answer to this question. Answer the question and also add bold text to highlight important points:
-{user_input}
-Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
-Keep the response concise, . Use **bold** for key terms."""
+    If the user's message appears to be a greeting in any language, respond with a friendly greeting and ask how you can help.
+    Otherwise, provide a brief and direct answer to this question. Answer the question and also add bold text to highlight important points:
+    {user_input}
+    Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
+    Keep the response concise, . Use **bold** for key terms."""
     
     gemini_response = get_gemini_response(gemini_prompt)
     return gemini_response
+
+@app.route('/get_case_update', methods=['POST'])
+def get_case_update():
+    case_number = request.json['case_number']
+    # Make a request to the file processing service
+    response = requests.post('http://localhost:5000/get_case_info', json={'case_number': case_number})
+    if response.status_code == 200:
+        case_info = response.json()
+        if 'error' in case_info:
+            return jsonify({'response': "I'm sorry, I couldn't find any information for that case number. Please check the number and try again, or contact the court directly for more information."})
+        else:
+            update = f"Here's the latest update for case number {case_number}:\n"
+            for key, value in case_info.items():
+                update += f"**{key}**: {value}\n"
+            return jsonify({'response': update})
+    else:
+        return jsonify({'response': "I'm sorry, there was an error retrieving the case information. Please try again later or contact support."})
+
 
 @app.route('/get_response', methods=['POST'])
 def chatbot_response():
@@ -127,5 +153,6 @@ def chatbot_response():
 def home():
     return render_template('index.html')
 
-if __name__ == "__main__":
-    app.run(host="192.168.203.79", port=5500)
+if __name__ == '__main__':
+    app.run(debug=True)
+
