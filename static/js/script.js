@@ -10,7 +10,47 @@ $(document).ready(function() {
     $('#clear-chat').click(clearChat);
     $('#voice-button').click(startVoiceInput);
     $('#back-button').click(closeChat);
+    var isFirstMessage = true;
+    
+    function sendMessage() {
+        var userInput = $('#user-message').val().trim();
+        var language = $('#language-select').val();
+        
+        if (userInput === '') return;
+
+        displayUserMessage(userInput);
+        $('#user-message').val('');
+
+        showThinking();
+
+        $.ajax({
+            url: '/get_response',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                message: userInput, 
+                language: language,
+                is_first_message: isFirstMessage
+            }),
+            success: function(data) {
+                hideThinking();
+                if (data.error) {
+                    displayBotMessage("I apologize, but I encountered an error: " + data.error + ". Please try again or contact support if the issue persists.", userInput);
+                } else {
+                    displayBotMessage(data.response, userInput);
+                }
+                isFirstMessage = false;
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                hideThinking();
+                console.error("AJAX error: " + textStatus + ' : ' + errorThrown);
+                displayBotMessage("I'm having trouble connecting to the server. Please check your internet connection and try again. If the problem persists, please contact support.", userInput);
+            }
+        });
+    }
 });
+var isFirstMessage = true;
+
 
 function openChat() {
     $('#chat-container').show();
@@ -106,7 +146,13 @@ function displayBotMessage(response, userInput) {
             function displayNextCharacter() {
                 if (charIndex < pointText.length) {
                     pointDiv.append(pointText[charIndex]);
-                    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+                    
+                    // Only auto-scroll if the user hasn't scrolled up
+                    var chatbox = $('#chatbox')[0];
+                    if (chatbox.scrollHeight - chatbox.scrollTop === chatbox.clientHeight) {
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                    }
+                    
                     charIndex++;
                     setTimeout(displayNextCharacter, 30);
                 } else {
@@ -142,7 +188,7 @@ function requestMoreDetails(originalMessage) {
         url: '/get_details',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ message: "Provide more details about: " + originalMessage }),
+        data: JSON.stringify({ message: originalMessage }),
         success: function(data) {
             hideThinking();
             displayBotMessage(data.response, originalMessage);

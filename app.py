@@ -2,8 +2,12 @@ from flask import Flask, request, jsonify, render_template
 import re
 import google.generativeai as genai
 import requests
+import logging
 
 app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Configure the Gemini AI
 genai.configure(api_key='AIzaSyAO36_LDr2H1jojusoSo72mscY6lA6BQO4')
@@ -100,54 +104,64 @@ def get_gemini_response(prompt):
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
-        return f"{str(e)}"
+        logging.error(f"Error in get_gemini_response: {str(e)}")
+        return None
 
+@app.route('/get_response', methods=['POST'])
+def chatbot_response():
+    try:
+        user_input = request.json['message']
+        is_first_message = request.json.get('is_first_message', False)
+        logging.info(f"Received user input: {user_input}")
+        
+        response = get_response(user_input, is_first_message)
+        
+        if response is None:
+            return jsonify({'error': 'Failed to generate response'}), 500
+        
+        logging.info(f"Sending response: {response}")
+        return jsonify({'response': response})
+    except Exception as e:
+        logging.error(f"Error in chatbot_response: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
 
-def get_response(user_input):
+def get_response(user_input, is_first_message):
     user_input = user_input.lower()
     
-    # Check if the user is asking about a case update
-    if re.search(r'case update|case status', user_input):
-        return "Please provide your case number for the latest update."
+    # Check if it's the first message
+    if is_first_message:
+        return "Hi, I am Vaani. How may I help you?"
     
+    # Check predefined responses
     for pattern, response in responses.items():
         if re.search(pattern, user_input):
             return response
     
     # If no predefined response, use Gemini
-    gemini_prompt = f"""As Vaani, an AI assistant for the Department of Justice in India, integrated on the website of department of justice:
-    If the user's message appears to be a greeting in any language, respond with a friendly greeting and ask how you can help.
-    Otherwise, provide a brief and direct answer to this question. Answer the question and also add bold text to highlight important points:
+    gemini_prompt = f"""As Vaani, an AI assistant for the Department of Justice in India, provide a response to this query:
     {user_input}
+    
+    Structure your response as follows:
+    1. A brief, direct answer (1-2 sentences).
+    2. If the topic requires more explanation, add "Here are some key points:" followed by 3-5 concise bullet points.
+    
     Focus only on legal matters, court procedures, and DoJ services directly related to the question. 
-    Keep the response concise, . Use **bold** for key terms."""
+    Use **bold** for key terms."""
     
     gemini_response = get_gemini_response(gemini_prompt)
-    return gemini_response
-
-@app.route('/get_case_update', methods=['POST'])
-def get_case_update():
-    case_number = request.json['case_number']
-    # Make a request to the file processing service
-    response = requests.post('http://localhost:5000/get_case_info', json={'case_number': case_number})
-    if response.status_code == 200:
-        case_info = response.json()
-        if 'error' in case_info:
-            return jsonify({'response': "I'm sorry, I couldn't find any information for that case number. Please check the number and try again, or contact the court directly for more information."})
-        else:
-            update = f"Here's the latest update for case number {case_number}:\n"
-            for key, value in case_info.items():
-                update += f"**{key}**: {value}\n"
-            return jsonify({'response': update})
-    else:
-        return jsonify({'response': "I'm sorry, there was an error retrieving the case information. Please try again later or contact support."})
+    return gemini_response if gemini_response else "I'm sorry, I couldn't generate a response at the moment. Please try again."
 
 
-@app.route('/get_response', methods=['POST'])
-def chatbot_response():
-    user_input = request.json['message']
-    response = get_response(user_input)
-    return jsonify({'response': response})
+@app.route('/get_details', methods=['POST'])
+def get_details():
+    message = request.json['message']
+    gemini_prompt = f"""As Vaani, an AI assistant for the Department of Justice in India, provide more detailed information about this topic:
+    {message}
+    Focus on legal matters, court procedures, and DoJ services directly related to the topic. 
+    Keep the response concise. Use **bold** for key terms."""
+    
+    gemini_response = get_gemini_response(gemini_prompt)
+    return jsonify({'response': gemini_response})
 
 @app.route('/')
 def home():
