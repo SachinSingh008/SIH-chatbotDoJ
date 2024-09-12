@@ -211,23 +211,67 @@ function hideThinking() {
 }
 
 function addSuggestions(messageDiv) {
-    var suggestions = ['What are my court case updates?', 'How do I apply for legal aid?', 'Show me recent amendments.'];
-    var suggestionsHtml = '<div class="suggestions">';
-    
-    suggestions.forEach(function(suggestion) {
-        suggestionsHtml += '<button class="suggestion-button">' + suggestion + '</button>';
-    });
-    
-    suggestionsHtml += '</div>';
-    messageDiv.append(suggestionsHtml);
+    var allSuggestions = [
+        { text: 'Current status of My cases', link: 'https://services.ecourts.gov.in/ecourtindia_v6/' },
+        { text: 'Pending cases', link: 'https://ecourts.gov.in/ecourts_home/' },
+        { text: 'Download ecourt service mobile app', link: 'https://play.google.com/store/apps/details?id=in.gov.ecourts.eCourtsServices&app_token=536ee5137075ebe5f197cd57ca8a0e5ff16dbead40da0e6b901285270e19902f' },
+        { text: 'Division of doj', link: 'https://ecourts.gov.in/ecourts_home/' },
+        { text: 'Know about judge and vacancies', link: 'https://doj.gov.in/national-judicial-data-grid-2/' },
+        { text: 'Live streaming of court cases', link: 'https://doj.gov.in/live-streaming-of-court-cases/' },
+        { text: 'Procedure to pay fine of traffic voilation', link: 'https://vcourts.gov.in/virtualcourt/' },
+        { text: 'Fast track court', link: 'https://ecourts.gov.in/ecourts_home/' },
+        { text: 'Efilling and epay', link: 'https://ecourts.gov.in/ecourts_home/' },
+    ];
 
-    $('.suggestion-button').click(function() {
-        var suggestion = $(this).text();
-        $('#user-message').val(suggestion);
-        sendMessage();
-    });
+    var currentPage = 1;
+    var suggestionsPerPage = 3; 
 
-    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+    function truncateText(text, maxLength) {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength - 3) + '...';
+        }
+        return text;
+    }
+
+    function displaySuggestions(page) {
+        var start = (page - 1) * suggestionsPerPage;
+        var end = start + suggestionsPerPage;
+        var pageSuggestions = allSuggestions.slice(start, end);
+
+        var suggestionsHtml = '<div class="suggestions">';
+        pageSuggestions.forEach(function(suggestion) {
+            suggestionsHtml += `
+                <div class="suggestion-item" onclick="window.location.href='${suggestion.link}'">
+                    ${truncateText(suggestion.text, 30)}
+                </div>
+            `;
+        });
+
+        var totalPages = Math.ceil(allSuggestions.length / suggestionsPerPage);
+        suggestionsHtml += `
+            <div class="suggestion-navigation">
+                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                <span>${currentPage} / ${totalPages}</span>
+                <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+            </div>
+        `;
+
+        suggestionsHtml += '</div>';
+        messageDiv.append(suggestionsHtml);
+    }
+
+    function changePage(newPage) {
+        if (newPage >= 1 && newPage <= Math.ceil(allSuggestions.length / suggestionsPerPage)) {
+            currentPage = newPage;
+            $('.suggestions').remove();
+            displaySuggestions(currentPage);
+        }
+    }
+
+    displaySuggestions(currentPage);
+
+    // Make changePage function accessible globally
+    window.changePage = changePage;
 }
 
 function startVoiceInput() {

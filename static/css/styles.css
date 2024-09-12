@@ -202,7 +202,6 @@ ul li a:hover {
 .message {
     border-radius: 15px;
     padding: 10px;
-    max-width: 80%;
     margin-bottom: 10px;
     clear: both;
 }
@@ -213,13 +212,18 @@ ul li a:hover {
     margin-left: auto;
     max-width: 60%;
     margin-top: 10px;
+    align-self: flex-end;
 }
 
 .bot-message {
-    background-color: #ececec;
+    background-color: #f0f0f0;
     float: left;
     white-space: pre-wrap;
     word-wrap: break-word;
+    max-width: 70%;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 .bot-message strong {
@@ -259,7 +263,7 @@ ul li a:hover {
 }
 
 .detail-link {
-    color: #3498db;
+    color: #0056b3;
     text-decoration: none;
     font-size: 0.8em;
     margin-left: 5px;
@@ -275,6 +279,10 @@ ul li a:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    background-color: #e6e6e6;
+    border-radius: 5px;
+    padding: 5px;
+    align-self: flex-start;
 }
 
 .suggestion-button {
@@ -301,36 +309,7 @@ ul li a:hover {
 .bot-message-container {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 15px;
-}
-
-.bot-logo {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-}
-
-.bot-text-container {
-    flex: 1;
-}
-.message-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.user-message {
-    align-self: flex-end;
-    background-color: #dff9fb;
-    margin-left: auto;
-    max-width: 60%;
-    margin-bottom: 10px;
-}
-
-.bot-message-container {
     align-self: flex-start;
-    display: flex;
-    align-items: flex-start;
 }
 
 .bot-logo {
@@ -339,15 +318,22 @@ ul li a:hover {
     margin-right: 10px;
 }
 
-.bot-message {
-    background-color: #ececec;
-    max-width: 60%;
+.bot-text-container {
+    flex: 1;
 }
 
-.suggestions {
-    align-self: flex-start;
-    margin-top: 10px;
+.message-container {
+    display: flex;
+    flex-direction: column;
+ 
 }
+
+.bot-point {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+}
+
 .bot-message .suggestions {
     margin-top: 10px;
 }
@@ -357,7 +343,7 @@ ul li a:hover {
     border: none;
     border-radius: 15px;
     padding: 5px 10px;
-    margin-right: 5px;
+    margin-right: 2px;
     margin-bottom: 5px;
     cursor: pointer;
     font-size: 0.9em;
@@ -367,26 +353,51 @@ ul li a:hover {
 .bot-message .suggestion-button:hover {
     background-color: rgba(82, 94, 236, 0.5);
 }
-.bot-point {
-    margin-bottom: 10px;
-    position: relative;
-    padding-left: 20px;
+
+.suggestion-item {
+    background-color: #ffffff;
+    margin-bottom: 5px;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.bot-message {
+.suggestion-item:hover {
     background-color: #f0f0f0;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
 }
 
-.detail-link {
+.suggestion-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suggestion-size {
     font-size: 0.8em;
-    color: #0056b3;
-    text-decoration: none;
-    margin-left: 10px;
+    color: #666;
 }
 
-.detail-link:hover {
-    text-decoration: underline;
+.suggestion-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 0.8em;
+}
+
+.suggestion-navigation button {
+    background-color: #d9d9d9;
+    border: none;
+    padding: 3px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.suggestion-navigation button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
