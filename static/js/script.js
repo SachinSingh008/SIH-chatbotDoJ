@@ -57,7 +57,7 @@ function openChat() {
     $('#chat-button').hide();
     
     if ($('#chatbox').is(':empty')) {
-        displayBotMessage("Hi, I am Vaani. How may I help you?");
+        displayBotMessage("Hi, I am .Satthi How may I help you?");
     }
 }
 
@@ -122,7 +122,7 @@ function displayUserMessage(message) {
 function displayBotMessage(response, userInput) {
     var messageContainer = $('<div class="message-container"></div>');
     var botMessageContainer = $('<div class="bot-message-container"></div>');
-    var botLogo = $('<img class="bot-logo" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="bot-logo">');
+    var botLogo = $('<img class="bot-logo" src="https://static.vecteezy.com/system/resources/previews/026/960/350/non_2x/male-cute-lawyer-character-in-court-free-png.png" alt="bot-logo">');
     var botMessageDiv = $('<div class="message bot-message"></div>');
 
     botMessageContainer.append(botLogo);
