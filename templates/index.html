@@ -8,50 +8,67 @@
 </head>
 <body>
     <!-- Add your existing website content here -->
-    <div id="header">
-        Department of Justice, India
-    </div>
-    <div id="navbar">
-        <a href="#">Home</a>
-        <a href="#">About Us</a>
-        <a href="#">Services</a>
-        <a href="#">Legal Resources</a>
-        <a href="#">Contact Us</a>
-    </div>
-    <div id="main-content">
-        <div id="intro">
-            <h2>Welcome to the Department of Justice, India</h2>
-            <p>The Department of Justice under the Ministry of Law and Justice is the oldest limb of the Government of India. We aim to ensure the administration of justice, promote legal reform, and provide accessible and effective legal services to the citizens of India.</p>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="https://doj.gov.in/sites/default/files/emblem-dark.png" alt="Emblem" class="emblem">
+                <div>
+                    <h1>DEPARTMENT OF JUSTICE</h1>
+                    <p>MINISTRY OF LAW AND JUSTICE, GOVERNMENT OF INDIA</p>
+                </div>
+            </div>
+            <div class="language-buttons">
+                <button class="active">ENGLISH</button>
+                <button>हिंदी</button>
+            </div>
         </div>
+    </header>
 
-        <div id="important-links">
-            <h2>Important Links</h2>
+    <nav>
+        <div class="container">
             <ul>
-                <li><a href="#">Supreme Court of India</a></li>
-                <li><a href="#">High Courts of India</a></li>
-                <li><a href="#">National Legal Services Authority</a></li>
-                <li><a href="#">E-Courts Project</a></li>
-                <li><a href="#">Ministry of Law and Justice</a></li>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Administration of Justice</a></li>
+                <li><a href="#">National Mission</a></li>
+                <li><a href="#">eCourts MMP</a></li>
             </ul>
         </div>
-        <a href="http://localhost:5001" target="_blank">Upload Case Files</a>
+    </nav>
 
-        <div id="notifications">
-            <h2>Latest Notifications</h2>
-            <ul>
-                <li><a href="#">Notification 1: Amendment in Legal Services Act</a></li>
-                <li><a href="#">Notification 2: New Guidelines for Legal Aid</a></li>
-                <li><a href="#">Notification 3: Launch of E-Courts Phase III</a></li>
-                <li><a href="#">Notification 4: Upcoming Judicial Appointments</a></li>
-                <li><a href="#">Notification 5: Revised Schedule for Court Proceedings</a></li>
-            </ul>
+    <main class="container">
+        <div class="banner">
+            <h2>HAMARA SAMVIDHAN</h2>
+            <h2>HAMARA SAMMAN</h2>
+            <p>2ND REGIONAL EVENT 2024</p>
         </div>
-    </div>
 
-    <div id="footer">
-        &copy; 2024 Department of Justice, India. All Rights Reserved.
-    </div>
+        <div class="news-ticker">
+            <h3>Latest News</h3>
+            <p id="news-content"></p>
+        </div>
 
+        <div class="content-grid">
+            <div class="about">
+                <h3>About Department</h3>
+                <p>As per the Allocation of Business (Rules), 1961, Department of Justice is a part of Ministry of Law & Justice, Government of India. It is one of the oldest Ministries of the Government of India. Till 31.12.2009, Department of Justice was part of Ministry of Home Affairs and Union Home Secretary had been the Secretary of Department of Justice. Keeping in view the increasing workload and formulating many policies and programmes on judicial reforms, a separate Department of Justice was created.</p>
+            </div>
+            <div class="whats-new">
+                <h3>What's New</h3>
+                <ul>
+                    <li>Monthly Achievement for August, 2024</li>
+                    <li>Detailed Demand for Grants for the year 2024-25</li>
+                    <li>Order of appointment of Shri Justice Syed Qamar Hasan Rizvi and 08 other Additional Judges of the Allahabad High Court as Permanent Judges of that High Court (21.08.2024)</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Department of Justice, Government of India. All rights reserved.</p>
+        </div>
+    </footer>
         
     <!-- Language Selector -->
     <select id="language-select" aria-label="Language Select">
@@ -60,7 +77,7 @@
     </select>
     
     <button id="chat-button" aria-label="Chat with DoJ Bot">
-        <img src="https://static.vecteezy.com/system/resources/previews/026/960/350/non_2x/male-cute-lawyer-character-in-court-free-png.png" alt="Bot Icon">
+        <img src="https://www.pngmart.com/files/16/Vector-Lawyer-Transparent-PNG.png" alt="Bot Icon">
     </button>
 
     <div id="chat-container">
@@ -73,8 +90,9 @@
         <div id="chatbox"></div>
         <div id="user-input">
             <input type="text" id="user-message" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
-            <button id="voice-button" onclick="startVoiceInput()">🎤</button> <!-- Voice input button -->
+            <button id="send-button">Send</button>
+            <button id="voice-button">🎤</button>
+            <button id="terminate-button" style="display: none;">Terminate</button>
         </div>
     </div>
     

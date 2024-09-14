@@ -48,6 +48,7 @@ $(document).ready(function() {
             }
         });
     }
+    $('#terminate-button').click(terminateMessage);
 });
 var isFirstMessage = true;
 
@@ -122,13 +123,17 @@ function displayUserMessage(message) {
 function displayBotMessage(response, userInput) {
     var messageContainer = $('<div class="message-container"></div>');
     var botMessageContainer = $('<div class="bot-message-container"></div>');
-    var botLogo = $('<img class="bot-logo" src="https://static.vecteezy.com/system/resources/previews/026/960/350/non_2x/male-cute-lawyer-character-in-court-free-png.png" alt="bot-logo">');
+    var botLogo = $('<img class="bot-logo" src="https://www.pngmart.com/files/16/Vector-Lawyer-Transparent-PNG.png" alt="bot-logo">');
     var botMessageDiv = $('<div class="message bot-message"></div>');
 
     botMessageContainer.append(botLogo);
     botMessageContainer.append(botMessageDiv);
     messageContainer.append(botMessageContainer);
     $('#chatbox').append(messageContainer);
+
+    // Hide send and mic buttons, show terminate button
+    $('#send-button, #voice-button').hide();
+    $('#terminate-button').show();
 
     // Split the response into points
     var points = response.split('\n').filter(point => point.trim() !== '');
@@ -138,36 +143,63 @@ function displayBotMessage(response, userInput) {
             var pointDiv = $('<div class="bot-point"></div>');
             botMessageDiv.append(pointDiv);
 
-            var currentPoint = points[index].replace(/^\s*[\*\-]\s*/, ''); // Remove leading asterisks or hyphens
+            var currentPoint = points[index].replace(/^\s*[\*\-]\s*/, '');
             var pointText = (index + 1) + '. ' + currentPoint;
 
+            pointText = pointText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            pointText = pointText.replace(/\*(.*?)\*\*/g, '<strong>$1</strong>');
+
             var charIndex = 0;
+            var htmlContent = '';
 
             function displayNextCharacter() {
-                if (charIndex < pointText.length) {
-                    pointDiv.append(pointText[charIndex]);
+                if (charIndex < pointText.length && !window.terminateMessageFlag) {
+                    if (pointText.substr(charIndex, 8) === '<strong>') {
+                        htmlContent += '<strong>';
+                        charIndex += 8;
+                    } else if (pointText.substr(charIndex, 9) === '</strong>') {
+                        htmlContent += '</strong>';
+                        charIndex += 9;
+                    } else {
+                        htmlContent += pointText[charIndex];
+                        charIndex++;
+                    }
+                    pointDiv.html(htmlContent);
                     
-                    // Only auto-scroll if the user hasn't scrolled up
                     var chatbox = $('#chatbox')[0];
                     if (chatbox.scrollHeight - chatbox.scrollTop === chatbox.clientHeight) {
                         chatbox.scrollTop = chatbox.scrollHeight;
                     }
                     
-                    charIndex++;
                     setTimeout(displayNextCharacter, 30);
                 } else {
-                    addDetailLink(pointDiv, currentPoint);
-                    setTimeout(() => displayNextPoint(index + 1), 500);
+                    if (!window.terminateMessageFlag) {
+                        addDetailLink(pointDiv, currentPoint);
+                        setTimeout(() => displayNextPoint(index + 1), 500);
+                    } else {
+                        finishMessageDisplay();
+                    }
                 }
             }
 
             displayNextCharacter();
         } else {
-            addSuggestions(botMessageDiv);
+            finishMessageDisplay();
         }
     }
 
     displayNextPoint(0);
+}
+
+function terminateMessage() {
+    window.terminateMessageFlag = true;
+}
+
+function finishMessageDisplay() {
+    addSuggestions($('.bot-message:last'));
+    $('#send-button, #voice-button').show();
+    $('#terminate-button').hide();
+    window.terminateMessageFlag = false;
 }
 
 function addDetailLink(pointDiv, originalMessage) {

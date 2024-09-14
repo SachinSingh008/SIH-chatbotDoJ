@@ -68,7 +68,7 @@ def get_response(user_input, is_first_message):
     
     # If no predefined response, use Gemini
     gemini_prompt = f"""As Satthi, an AI assistant for the Department of Justice in India, provide a response to this query:
-    {user_input}
+    {user_input}    
     
     Structure your response as follows:
     1. A brief, direct answer (1-2 sentences).
@@ -97,7 +97,7 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='192.168.4.25', port=5000)
 
 
 
