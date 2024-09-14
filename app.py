@@ -59,7 +59,7 @@ def get_response(user_input, is_first_message):
     
     # Check if it's the first message
     if is_first_message:
-        return "Hi, I am Satthi. How may I help you?"
+        return "Hi, I am Saathi. How may I help you?"
     
     # Check predefined responses
     for pattern, response in responses.items():
@@ -67,7 +67,7 @@ def get_response(user_input, is_first_message):
             return response
     
     # If no predefined response, use Gemini
-    gemini_prompt = f"""As Satthi, an AI assistant for the Department of Justice in India, provide a response to this query:
+    gemini_prompt = f"""As Saathi, an AI assistant for the Department of Justice in India, provide a response to this query:
     {user_input}    
     
     Structure your response as follows:
@@ -84,7 +84,7 @@ def get_response(user_input, is_first_message):
 @app.route('/get_details', methods=['POST'])
 def get_details():
     message = request.json['message']
-    gemini_prompt = f"""As Satthi, an AI assistant for the Department of Justice in India, provide more detailed information about this topic:
+    gemini_prompt = f"""As Saathi, an AI assistant for the Department of Justice in India, provide more detailed information about this topic:
     {message}
     Focus on legal matters, court procedures, and DoJ services directly related to the topic. 
     Keep the response concise. Use **bold** for key terms."""

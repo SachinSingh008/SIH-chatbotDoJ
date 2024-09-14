@@ -58,7 +58,7 @@ function openChat() {
     $('#chat-button').hide();
     
     if ($('#chatbox').is(':empty')) {
-        displayBotMessage("Hi, I am .Satthi How may I help you?");
+        displayBotMessage("Hi, I am .Saathi How may I help you?");
     }
 }
 
