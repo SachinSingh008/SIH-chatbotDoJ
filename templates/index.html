@@ -4,503 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Website with DoJ Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, 
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-        }
-    
-        /* Header and Navigation */
-        #header, #navbar {
-            color: white;
-            text-align: center;
-        }
-    
-        #header {
-            background-color: #0056b3;
-            padding: 20px 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-    
-        #navbar {
-            display: flex;
-            justify-content: All;
-            background-color: #003366;
-            padding: 10px 0;
-        }
-    
-        #navbar a {
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    
-        #navbar a:hover {
-            background-color: #0056b3;
-            border-radius: 5px;
-        }
-    
-        /* Main Content */
-        #main-content {
-            padding: 20px;
-        }
-    
-        #intro, #important-links, #notifications {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-    
-        #intro {
-            background-color: #e9ecef;
-        }
-    
-        #important-links, #notifications {
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-    
-        h2 {
-            color: #0056b3;
-        }
-    
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-    
-        ul li {
-            margin-bottom: 10px;
-        }
-    
-        ul li a {
-            color: #0056b3;
-            text-decoration: none;
-        }
-    
-        ul li a:hover {
-            text-decoration: underline;
-        }
-    
-        /* Footer */
-        #footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: 20px;
-        }
-    
-        /* Chat Container */
-        #chat-container {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            height: 520px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            background-color: #f0f0f0;
-            z-index: 1000;
-            flex-direction: column;
-        }
-    
-        #chat-header {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px;
-            font-weight: bold;
-            text-align: center;
-            position: relative;
-        }
-    
-        #back-button {
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            background-color: transparent;
-            color: white;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    
-        #back-button svg {
-            width: 20px;
-            height: 20px;
-        }
-    
-        #chatbox {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            height: 400px;
-        }
-    
-        /* User Input */
-        #user-input {
-            display: flex;
-            padding: 10px;
-            background-color: white;
-        }
-    
-        #user-input input {
-            flex-grow: 1;
-            margin-right: 10px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
-    
-        #user-input button, .detail-button {
-            background-color: #0056b3;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-    
-        .detail-button {
-            margin-left: 10px;
-            font-size: 0.8em;
-            display: inline-block;
-            margin-top: 5px;
-        }
-    
-        /* Chat Button */
-        #chat-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1001;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #0056b3;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-    
-        #chat-button img {
-            width: 40px;
-            height: 40px;
-        }
-    
-        /* Messages */
-        .message {
-            max-width: 80%;
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            clear: both;
-        }
-    
-        .user-message {
-            background-color: #dcf8c6;
-            float: right;
-        }
-    
-        .bot-message {
-            background-color: white;
-            float: left;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-    
-        .bot-message strong {
-            font-weight: bold;
-        }
-    
-        .bot-message ol {
-            padding-left: 20px;
-            margin: 0;
-        }
-    
-        .bot-message li, .bot-message p {
-            margin-bottom: 10px;
-        }
-    
-        /* Thinking Animation */
-        .thinking {
-            float: left;
-            background-color: #e0e0e0;
-            padding: 8px 12px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-        }
-    
-        .dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #444;
-            animation: wave 1.3s linear infinite;
-        }
-    
-        .dot:nth-child(2) {
-            animation-delay: -1.1s;
-        }
-    
-        .dot:nth-child(3) {
-            animation-delay: -0.9s;
-        }
-    
-        @keyframes wave {
-            0%, 60%, 100% { transform: initial; }
-            30% { transform: translateY(-10px); }
-        }
-    
-        /* Learning Note */
-        #learning-note {
-            font-size: 0.8em;
-            color: #666;
-            text-align: center;
-            padding: 5px;
-            background-color: #f0f0f0;
-        }
-    </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
 </head>
 <body>
-    
     <!-- Add your existing website content here -->
-    <div id="header">
-        Department of Justice, India
-    </div>
-    <div id="navbar">
-        <a href="#">Home</a>
-        <a href="#">About Us</a>
-        <a href="#">Services</a>
-        <a href="#">Legal Resources</a>
-        <a href="#">Contact Us</a>
-    </div>
-    <div id="main-content">
-        <div id="intro">
-            <h2>Welcome to the Department of Justice, India</h2>
-            <p>The Department of Justice under the Ministry of Law and Justice is the oldest limb of the Government of India. We aim to ensure the administration of justice, promote legal reform, and provide accessible and effective legal services to the citizens of India.</p>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="https://doj.gov.in/sites/default/files/emblem-dark.png" alt="Emblem" class="emblem">
+                <div>
+                    <h1>DEPARTMENT OF JUSTICE</h1>
+                    <p>MINISTRY OF LAW AND JUSTICE, GOVERNMENT OF INDIA</p>
+                </div>
+            </div>
+            <div class="language-buttons">
+                <button class="active">ENGLISH</button>
+                <button>हिंदी</button>
+            </div>
         </div>
+    </header>
 
-        <div id="important-links">
-            <h2>Important Links</h2>
+    <nav>
+        <div class="container">
             <ul>
-                <li><a href="#">Supreme Court of India</a></li>
-                <li><a href="#">High Courts of India</a></li>
-                <li><a href="#">National Legal Services Authority</a></li>
-                <li><a href="#">E-Courts Project</a></li>
-                <li><a href="#">Ministry of Law and Justice</a></li>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Administration of Justice</a></li>
+                <li><a href="#">National Mission</a></li>
+                <li><a href="#">eCourts MMP</a></li>
             </ul>
         </div>
+    </nav>
 
-        <div id="notifications">
-            <h2>Latest Notifications</h2>
-            <ul>
-                <li><a href="#">Notification 1: Amendment in Legal Services Act</a></li>
-                <li><a href="#">Notification 2: New Guidelines for Legal Aid</a></li>
-                <li><a href="#">Notification 3: Launch of E-Courts Phase III</a></li>
-                <li><a href="#">Notification 4: Upcoming Judicial Appointments</a></li>
-                <li><a href="#">Notification 5: Revised Schedule for Court Proceedings</a></li>
-            </ul>
+    <main class="container">
+        <div class="banner">
+            <h2>HAMARA SAMVIDHAN</h2>
+            <h2>HAMARA SAMMAN</h2>
+            <p>2ND REGIONAL EVENT 2024</p>
         </div>
-    </div>
 
-    <div id="footer">
-        &copy; 2024 Department of Justice, India. All Rights Reserved.
-    </div>
+        <div class="news-ticker">
+            <h3>Latest News</h3>
+            <p id="news-content"></p>
+        </div>
 
+        <div class="content-grid">
+            <div class="about">
+                <h3>About Department</h3>
+                <p>As per the Allocation of Business (Rules), 1961, Department of Justice is a part of Ministry of Law & Justice, Government of India. It is one of the oldest Ministries of the Government of India. Till 31.12.2009, Department of Justice was part of Ministry of Home Affairs and Union Home Secretary had been the Secretary of Department of Justice. Keeping in view the increasing workload and formulating many policies and programmes on judicial reforms, a separate Department of Justice was created.</p>
+            </div>
+            <div class="whats-new">
+                <h3>What's New</h3>
+                <ul>
+                    <li>Monthly Achievement for August, 2024</li>
+                    <li>Detailed Demand for Grants for the year 2024-25</li>
+                    <li>Order of appointment of Shri Justice Syed Qamar Hasan Rizvi and 08 other Additional Judges of the Allahabad High Court as Permanent Judges of that High Court (21.08.2024)</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Department of Justice, Government of India. All rights reserved.</p>
+        </div>
+    </footer>
+        
+    <!-- Language Selector -->
+    <select id="language-select" aria-label="Language Select">
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+    </select>
+    
     <button id="chat-button" aria-label="Chat with DoJ Bot">
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Bot Icon">
+        <img src="https://www.pngmart.com/files/16/Vector-Lawyer-Transparent-PNG.png" alt="Bot Icon">
     </button>
 
     <div id="chat-container">
         <div id="chat-header">
             <button id="back-button" onclick="toggleChat()" aria-label="Back">
-                <img src = "https://www.pngmart.com/files/22/Back-Button-PNG-Photo.png"height= "30px"  alt="back">
+                <img src="https://www.pngmart.com/files/22/Back-Button-PNG-Photo.png" height="30px" alt="back">
             </button>
-            VAANI
+            SAATHI
         </div>
         <div id="chatbox"></div>
         <div id="user-input">
             <input type="text" id="user-message" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
+            <button id="send-button">Send</button>
+            <button id="voice-button">🎤</button>
+            <button id="terminate-button" style="display: none;">Terminate</button>
         </div>
     </div>
-
-    <!-- Include jQuery and Showdown.js -->
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#chat-button').click(function() {
-                toggleChat();
-            });
-
-            $('#user-message').keypress(function(e) {
-                if (e.which == 13) {  // Enter key
-                    sendMessage();
-                    return false;  // Prevent default Enter key behavior
-                }
-            });
-        });
-
-        function toggleChat() {
-            $('#chat-container').toggle();
-            $('#chat-button').toggle();
-        }
-
-        function sendMessage() {
-            var userInput = $('#user-message').val().trim();
-            if (userInput === '') return;
-
-            $('#chatbox').append('<div class="message user-message">' + userInput + '</div>');
-            $('#user-message').val('');
-            $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
-
-            // Show thinking animation
-            var thinkingHtml = '<div class="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
-            $('#chatbox').append(thinkingHtml);
-            $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
-
-            $.ajax({
-                url: '/get_response',  // Your backend endpoint
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({message: userInput}),
-                success: function(data) {
-                    $('.thinking').remove();
-                    displayResponse(data.response);
-                }
-            });
-        }
-
-        function displayResponse(response, iconPath) {
-            var converter = new showdown.Converter();
-            var htmlResponse = converter.makeHtml(response);
-        
-            var botMessageDiv = $('<div class="message bot-message"></div>');
-        
-            // Add the icon image to the bot message div
-            var iconImg = $('<img>').attr('src', iconPath).addClass('bot-icon');
-            botMessageDiv.prepend(iconImg);
-        
-            $('#chatbox').append(botMessageDiv);
-        
-            // Convert bullet points or plain text to numbered list
-            htmlResponse = convertToNumberedList(htmlResponse);
-        
-            var charIndex = 0;
-        
-            function displayNextCharacter() {
-                if (charIndex < htmlResponse.length) {
-                    let currentChar = htmlResponse[charIndex];
-        
-                    if (currentChar === '<') {
-                        let tag = '';
-                        while (htmlResponse[charIndex] !== '>' && charIndex < htmlResponse.length) {
-                            tag += htmlResponse[charIndex];
-                            charIndex++;
-                        }
-                        tag += '>';
-                        botMessageDiv.append(tag);
-                    } else {
-                        botMessageDiv.append(currentChar);
-                    }
-        
-                    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
-                    charIndex++;
-                    setTimeout(displayNextCharacter, 30);
-                } else {
-                    addDetailButtons(botMessageDiv);
-                }
-            }
-        
-            displayNextCharacter();
-        }
-        
-        function convertToNumberedList(html) {
-            var $temp = $('<div>').html(html);
-            var $list = $('<ol>');
-            var listStarted = false;
-        
-            $temp.contents().each(function() {
-                if (this.nodeType === 3) { // Text node
-                    var lines = $(this).text().split('\n');
-                    lines.forEach(function(line) {
-                        line = line.trim();
-                        if (line) {
-                            if (!listStarted) {
-                                $temp.empty().append($list);
-                                listStarted = true;
-                            }
-                            $list.append($('<li>').text(line));
-                        }
-                    });
-                } else if (this.nodeType === 1) { // Element node
-                    if ($(this).is('ul, ol')) {
-                        $list = $('<ol>').append($(this).contents());
-                        $temp.empty().append($list);
-                        listStarted = true;
-                    } else if ($(this).is('li')) {
-                        if (!listStarted) {
-                            $temp.empty().append($list);
-                            listStarted = true;
-                        }
-                        $list.append($(this));
-                    } else {
-                        $list.append($('<li>').append($(this).clone()));
-                    }
-                }
-            });
-        
-            return $temp.html();
-        }
-        
-        function addDetailButtons(messageDiv) {
-            var listItems = messageDiv.find('li');
-            listItems.each(function(index) {
-                var button = $('<button>').text('More details').addClass('detail-button');
-                button.on('click', function() {
-                    askForDetails(index + 1, $(this).parent().text().replace('More details', '').trim());
-                });
-                $(this).append(' ').append(button); // Add a space before the button
-            });
-        }
-        
-        function askForDetails(pointNumber, pointText) {
-            var userInput = "Tell me more about point " + pointNumber + ": " + pointText;
-            $('#user-message').val(userInput);
-            sendMessage();
-        }
-        function toggleChat() {
-            $('#chat-container').toggle();
-            $('#chat-button').toggle();
-            
-            // Check if the chatbox is empty (i.e., chat just opened)
-            if ($('#chatbox').is(':empty')) {
-                displayInitialGreeting();
-            }
-        }
-        
-        function displayInitialGreeting() {
-            var greeting = "Hi, I am Vaani. How may I help you? Enter the query you want to ask in the section below.";
-            displayResponse(greeting, );
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
