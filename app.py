@@ -10,7 +10,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 # Configure the Gemini AI
-genai.configure(api_key='AIzaSyAO36_LDr2H1jojusoSo72mscY6lA6BQO4')
+genai.configure(api_key='AIzaSyCJj2U2c23byVf0hC-YhiMKwi7CiOVBNr8')
 model = genai.GenerativeModel('gemini-pro')
 
 responses = {
